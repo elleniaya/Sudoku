@@ -1,5 +1,4 @@
 public enum SudokuPuzzleType {
-	SIXBYSIX(6,6,3,2,new String[] {"1","2","3","4","5","6"},"6 By 6 Game"),
 	NINEBYNINE(9,9,3,3,new String[] {"1","2","3","4","5","6","7","8","9"},"9 By 9 Game");
 	
 	private final int rows;
