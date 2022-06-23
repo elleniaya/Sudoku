@@ -20,11 +20,16 @@ public class SudokuFrame extends JFrame {
 		JMenu file = new JMenu("Game");
 
 		JMenu newGame = new JMenu("New Game");
-		JMenuItem sixBySixGame = new JMenuItem("6 By 6 Game");
-		sixBySixGame.addActionListener(new NewGameListener(SudokuPuzzleType.SIXBYSIX,30));
-		JMenuItem nineByNineGame = new JMenuItem("9 By 9 Game");
-		nineByNineGame.addActionListener(new NewGameListener(SudokuPuzzleType.NINEBYNINE,26));
-		
+
+		JMenuItem levelEasy = new JMenuItem("Easy");
+		levelEasy.addActionListener(new NewGameListener(SudokuPuzzleType.NINEBYNINE, 26));
+
+		JMenuItem levelNormal = new JMenuItem("Normal");
+		levelNormal.addActionListener(new NewGameListener(SudokuPuzzleType.NINEBYNINE, 26));
+
+		JMenuItem levelHard = new JMenuItem("Hard");
+		levelHard.addActionListener(new NewGameListener(SudokuPuzzleType.NINEBYNINE, 26));
+
 	    JMenuItem exit = new JMenuItem("Exit", new ImageIcon("exit.png"));
 
 		exit.addActionListener(new ActionListener()
@@ -35,9 +40,7 @@ public class SudokuFrame extends JFrame {
                 }
             });
 
-		newGame.add(sixBySixGame);
-		newGame.addSeparator();
-		newGame.add(nineByNineGame);
+		//newGame.add(nineByNineGame);
 
 		file.add(newGame);
 		file.addSeparator();
@@ -71,7 +74,7 @@ public class SudokuFrame extends JFrame {
 		JOptionPane.showMessageDialog(null, full);
 	}
 
-	public void rebuildInterface(SudokuPuzzleType puzzleType,int fontSize) {
+	public void rebuildInterface(SudokuPuzzleType puzzleType, int fontSize) {
 		SudokuPuzzle generatedPuzzle = new SudokuGenerator().generateRandomSudoku(puzzleType);
 		sPanel.newSudokuPuzzle(generatedPuzzle);
 		sPanel.setFontSize(fontSize);
@@ -84,16 +87,14 @@ public class SudokuFrame extends JFrame {
 	private class NewGameListener implements ActionListener {
 
 		private SudokuPuzzleType puzzleType;
-		private int fontSize;
-		
-		public NewGameListener(SudokuPuzzleType puzzleType,int fontSize) {
+		private int Size;
+		public NewGameListener(SudokuPuzzleType puzzleType, int Size) {
 			this.puzzleType = puzzleType;
-			this.fontSize = fontSize;
+			this.Size = Size;
 		}
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			rebuildInterface(puzzleType,fontSize);
+			rebuildInterface(puzzleType, Size);
 		}
 	}
 	
