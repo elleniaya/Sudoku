@@ -13,14 +13,14 @@ public class SudokuPanel extends JPanel {
 	private SudokuPuzzle puzzle;
 	private int usedWidth;
 	private int usedHeight;
-	private int fontSize;
+	private int Size;
 	
 	public SudokuPanel() {
 		this.setPreferredSize(new Dimension(540,450));
 		this.puzzle = new SudokuGenerator().generateRandomSudoku(SudokuPuzzleType.NINEBYNINE);
 		usedWidth = 0;
 		usedHeight = 0;
-		fontSize = 26;
+		Size = 26;
 	}
 	
 	
@@ -29,15 +29,15 @@ public class SudokuPanel extends JPanel {
 		this.puzzle = puzzle;
 		usedWidth = 0;
 		usedHeight = 0;
-		fontSize = 26;
+		Size = 26;
 	}
 	
 	public void newSudokuPuzzle(SudokuPuzzle puzzle) {
 		this.puzzle = puzzle;
 	}
 	
-	public void setFontSize(int fontSize) {
-		this.fontSize = fontSize;
+	public void setFontSize(int Size) {
+		this.Size = Size;
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class SudokuPanel extends JPanel {
 		
 		g2d.fillRect(0, 0,usedWidth,usedHeight);
 		
-		g2d.setColor(new Color(0.0f,0.0f,0.0f)); 
+		g2d.setColor(new Color(0.0f, 0.0f, 0.0f)); 
 		for (int x = 0; x <= usedWidth; x += slotWidth) {
 			if((x / slotWidth) % puzzle.getBoxWidth() == 0) {
 				g2d.setStroke(new BasicStroke(2));
@@ -77,7 +77,7 @@ public class SudokuPanel extends JPanel {
 			}
 		}
 		
-		Font f = new Font("Times New Roman", Font.PLAIN, fontSize);
+		Font f = new Font("Times New Roman", Font.PLAIN, Size);
 		g2d.setFont(f);
 		FontRenderContext fContext = g2d.getFontRenderContext();
 		for(int row = 0; row < puzzle.getNumRows(); row++) {
