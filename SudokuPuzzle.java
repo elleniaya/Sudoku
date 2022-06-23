@@ -1,7 +1,6 @@
 public class SudokuPuzzle {
 
 	protected String [][] board;
-	protected boolean [][] mutable;
 	private final int ROWS;
 	private final int COLUMNS;
 	private final int BOXWIDTH;
@@ -15,23 +14,13 @@ public class SudokuPuzzle {
 		this.BOXHEIGHT = boxHeight;
 		this.VALIDVALUES = validValues;
 		this.board = new String[ROWS][COLUMNS];
-		this.mutable = new boolean[ROWS][COLUMNS];
 		initializeBoard();
-		initializeMutableSlots();
 	}
 
     private void initializeBoard() {
 		for(int row = 0; row < this.ROWS; row++) {
 			for(int col = 0; col < this.COLUMNS; col++) {
 				this.board[row][col] = "";
-			}
-		}
-	}
-	
-	private void initializeMutableSlots() {
-		for(int row = 0; row < this.ROWS; row++) {
-			for(int col = 0; col < this.COLUMNS; col++) {
-				this.mutable[row][col] = true;
 			}
 		}
 	}
@@ -74,7 +63,7 @@ public class SudokuPuzzle {
     }
 	
 	public String getValue(int row,int col) { 
-		if(this.inRange(row,col)) {
+		if(this.CorrectCoords(row,col)) {
 			return this.board[row][col];
 		}
 		return "";
@@ -84,33 +73,7 @@ public class SudokuPuzzle {
 		return this.board;
 	}
 	
-	public boolean inRange(int row,int col) {
-		return row <= this.ROWS && col <= this.COLUMNS && row >= 0 && col >= 0;
+	public boolean CorrectCoords(int row, int col) {
+		return (row <= this.ROWS && col <= this.COLUMNS && row >= 0 && col >= 0);
 	}
-	
-	public boolean boardFull() {
-		for(int r = 0; r < this.ROWS; r++) {
-			for(int c = 0;c < this.COLUMNS;c++) {
-				if(this.board[r][c].equals("")) return false;
-			}
-		}
-		return true;
-	}
-	
-	public void makeSlotEmpty(int row,int col) { 
-		this.board[row][col] = "";
-	}
-	
-	@Override
-	public String toString() { 
-		String str = "Game Board:\n";
-		for(int row=0; row < this.ROWS;row++) {
-			for(int col = 0; col < this.COLUMNS; col++) {
-				str += this.board[row][col] + " ";
-			}
-			str += "\n";
-		}
-		return str + "\n";
-	}
-	
 }
