@@ -14,7 +14,6 @@ public class SudokuGenerator {
     private final int ROWS = 9;
 	private final int COLUMNS = 9;
 
-    private final String LEVEL;
     Random randomGenerator = new Random();
 
     String easy = "easy";
@@ -22,19 +21,16 @@ public class SudokuGenerator {
     String hard = "hard";
 
     String[] generatedMatrix = new String[ROWS * COLUMNS];
+    boolean[] mark = new boolean[ROWS * COLUMNS];
 
-    public SudokuGenerator(String level) {
-        this.LEVEL = level;
-    }
-
-	public String[] generateRandomSudoku() {
+	public String[] generateRandomSudoku(String level) {
 
         try {
-        if (LEVEL.equals(easy)) {
+        if (level.equals(easy)) {
             BufferedReader br = new BufferedReader(new FileReader("EASY.txt"));
             readPuzzle(br);
             br.close();
-        } else if (LEVEL.equals(normal)) {
+        } else if (level.equals(normal)) {
             BufferedReader br = new BufferedReader(new FileReader("NORMAL.txt"));
             readPuzzle(br);
             br.close();
@@ -49,8 +45,24 @@ public class SudokuGenerator {
 		
         mixMatrix();
 
+        markPuzzle();
+
 		return generatedMatrix;
 	}
+
+    public void markPuzzle() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                if (!generatedMatrix[i * ROWS + j].equals("0")) {
+                    mark[i * ROWS + j] = true;
+                } else mark[i * ROWS + j] = false;
+            }
+        }
+    }
+
+    private boolean isMarked(int row, int column) {
+        return mark[row * ROWS + column];
+    }
 
     private void readPuzzle (BufferedReader br) {
     try {
@@ -71,7 +83,6 @@ public class SudokuGenerator {
     }
 
     private void mixMatrix () {
-
         for (int i = 0; i < maxMix; i++) {
             swaprandomColumn();
             swaprandomRows();
@@ -142,5 +153,48 @@ public class SudokuGenerator {
         transposingMatrix();
         swaprandomcolumnArea();
         transposingMatrix();
+    }
+
+    public String[] updatePuzzle (String value, int row, int column) {
+        if (!isMarked(row, column) && isValidMove(value, row, column)) {
+            generatedMatrix[row * ROWS + column] = value;
+        }
+        return generatedMatrix;
+    }
+
+    private boolean isValidMove(String value, int row, int column) {
+        return !usedinRow(value, row) && !usedinColumn(value, column) && !usedinBox(value, row, column);
+    }
+
+    private boolean usedinRow(String value, int row) {
+        for (int col = 0; col < COLUMNS; col++) {
+            if (generatedMatrix[row * ROWS + col].equals(value)) return true;
+        }
+        return false;
+    }
+
+    private boolean usedinColumn(String value, int column) {
+        for (int row = 0; row < ROWS; row++) {
+            if (generatedMatrix[row * ROWS + column].equals(value)) return true;
+        }
+        return false;
+    }
+
+    private boolean usedinBox(String value, int row, int column) {
+        int boxRow = row / OFFSET;
+		int boxCol = column / OFFSET;
+			
+		int startingRow = boxRow * OFFSET;
+		int startingCol = boxCol * OFFSET;
+
+        for(int r = startingRow; r <= (startingRow + OFFSET) - 1; r++) {
+            for(int c = startingCol; c <= (startingCol + OFFSET) - 1; c++) {
+                if(generatedMatrix[r * ROWS + c].equals(value)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 }
