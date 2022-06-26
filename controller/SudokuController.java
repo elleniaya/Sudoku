@@ -4,19 +4,23 @@ import model.SudokuGenerator;
 
 import view.SudokuFrame;
 import view.NewGameListener;
+import view.ClickListener;
 
-public class SudokuController implements Runnable, NewGameListener{
+public class SudokuController implements Runnable, NewGameListener, ClickListener {
     private final SudokuFrame frame;
-    private final int ROWS = 9;
-    private final int COLUMNS = 9;
     private final String easyLevel = "easy";
     private final String normalLevel = "normal";
     private final String hardLevel = "hard";
+    SudokuGenerator newSudoku;
+
+    private final int ROWS = 9;
+    private final int COLUMNS = 9;
 
     String[] puzzle = new String[ROWS * COLUMNS];
 
     public SudokuController() {
-        this.frame = new SudokuFrame(this);
+        this.frame = new SudokuFrame(this, this);
+        newSudoku = new SudokuGenerator();
     }
 
     public void run() {
@@ -25,22 +29,28 @@ public class SudokuController implements Runnable, NewGameListener{
 
     @Override
     public void newGameEasy() {
-        SudokuGenerator newSudoku = new SudokuGenerator(easyLevel);
-        puzzle = newSudoku.generateRandomSudoku();
+        puzzle = newSudoku.generateRandomSudoku(easyLevel);
+        newSudoku.markPuzzle();
         frame.update(puzzle);
     }
 
     @Override
     public void newGameNormal() {
-        SudokuGenerator newSudoku = new SudokuGenerator(normalLevel);
-        puzzle = newSudoku.generateRandomSudoku();
+        puzzle = newSudoku.generateRandomSudoku(normalLevel);
+        newSudoku.markPuzzle();
         frame.update(puzzle);
     }
 
     @Override
     public void newGameHard() {
-        SudokuGenerator newSudoku = new SudokuGenerator(hardLevel);
-        puzzle = newSudoku.generateRandomSudoku();
+        puzzle = newSudoku.generateRandomSudoku(hardLevel);
+        newSudoku.markPuzzle();
+        frame.update(puzzle);
+    }
+
+    @Override
+    public void onClick(String value, int row, int column) {
+        puzzle = newSudoku.updatePuzzle(value, row, column);
         frame.update(puzzle);
     }
 }
