@@ -14,7 +14,7 @@ public class SudokuFrame extends JFrame {
 	private static final String NORMAL = "Normal";
 	private static final String HARD = "Hard";
 	private static final String RULES = "You need to fill in the free cells with numbers from 1 to 9 so that in each row, in each column, and in each small 3x3 square, each number occurs only once.";
-    private static final String[] VALIDVALUES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        private static final String[] VALIDVALUES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 	private JPanel buttonSelectionPanel;
 	private SudokuPanel sPanel;
 	private final NewGameListener newGameListener;
@@ -55,7 +55,7 @@ public class SudokuFrame extends JFrame {
 		JMenuItem levelHard = new JMenuItem(HARD);
 		levelHard.addActionListener(event -> newGameListener.newGameHard());
 
-	    JMenuItem exit = new JMenuItem(EXIT, new ImageIcon("exit.png"));
+	        JMenuItem exit = new JMenuItem(EXIT, new ImageIcon("exit.png"));
 		exit.addActionListener(event -> System.exit(0));
 
 		newGame.add(levelEasy);
@@ -91,7 +91,7 @@ public class SudokuFrame extends JFrame {
 
 	private void messageDialog() {
 		String name;                      
-        name = JOptionPane.showInputDialog("Enter your name:");
+                name = JOptionPane.showInputDialog("Enter your name:");
 
 		String full;                 
 		full = "Hello " + name + "!" + "\n" + "Rules of the game:" + "\n" + RULES;
