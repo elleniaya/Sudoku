@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
+import java.awt.event.MouseEvent;
+import javax.swing.event.MouseInputAdapter;
 
 import javax.swing.JPanel;
 
@@ -16,6 +18,8 @@ public class SudokuPanel extends JPanel {
 	private final int COLUMNS = 9;
 	private final int BOXWIDTH = 3;
 	private final int BOXHEIGHT = 3;
+	private int selectedCol;
+	private int selectedRow;
 
 	String[] puzzle = new String[ROWS * COLUMNS];
 
@@ -25,6 +29,7 @@ public class SudokuPanel extends JPanel {
 	
 	public SudokuPanel() {
 		this.setPreferredSize(new Dimension(540,450));
+		this.addMouseListener(new SudokuPanelMouseAdapter());
 		usedWidth = 0;
 		usedHeight = 0;
 		Size = 26;
@@ -80,9 +85,37 @@ public class SudokuPanel extends JPanel {
 		FontRenderContext fContext = g2d.getFontRenderContext();
 		for(int row = 0; row < ROWS; row++) {
 			for(int col = 0; col < COLUMNS; col++) {
-				int textWidth = (int) f.getStringBounds(puzzle[row * ROWS + col], fContext).getWidth();
-				int textHeight = (int) f.getStringBounds(puzzle[row * ROWS + col], fContext).getHeight();
-				g2d.drawString(puzzle[row * ROWS + col], (col*slotWidth)+((slotWidth/2)-(textWidth/2)), (row*slotHeight)+((slotHeight/2)+(textHeight/2)));
+				if (!puzzle[row * ROWS + col].equals("0")) {
+				    int textWidth = (int) f.getStringBounds(puzzle[row * ROWS + col], fContext).getWidth();
+				    int textHeight = (int) f.getStringBounds(puzzle[row * ROWS + col], fContext).getHeight();
+				    g2d.drawString(puzzle[row * ROWS + col], (col*slotWidth)+((slotWidth/2)-(textWidth/2)), (row*slotHeight)+((slotHeight/2)+(textHeight/2)));
+				}
+			}
+		}
+
+		if(selectedCol != -1 && selectedRow != -1) {
+			g2d.setColor(new Color(0.0f,0.0f,1.0f,0.3f));
+			g2d.fillRect(selectedCol * slotWidth, selectedRow * slotHeight, slotWidth, slotHeight);
+		}
+	}
+
+	public int getselectedRow() {
+		return selectedRow;
+	}
+
+	public int getselectedCol() {
+		return selectedCol;
+	}
+
+	private class SudokuPanelMouseAdapter extends MouseInputAdapter {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getButton() == MouseEvent.BUTTON1) {
+				int slotWidth = usedWidth / COLUMNS;
+				int slotHeight = usedHeight / ROWS;
+				selectedRow = e.getY() / slotHeight;
+				selectedCol = e.getX() / slotWidth;
+				e.getComponent().repaint();
 			}
 		}
 	}
