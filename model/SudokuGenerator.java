@@ -20,40 +20,39 @@ public class SudokuGenerator {
     String normal = "normal";
     String hard = "hard";
 
-    String[] generatedMatrix = new String[ROWS * COLUMNS];
+    String[] generatedPuzzle = new String[ROWS * COLUMNS];
     boolean[] mark = new boolean[ROWS * COLUMNS];
 
 	public String[] generateRandomSudoku(String level) {
 
-        try {
         if (level.equals(easy)) {
-            BufferedReader br = new BufferedReader(new FileReader("EASY.txt"));
-            readPuzzle(br);
-            br.close();
+            readPuzzle("EASY.txt");
         } else if (level.equals(normal)) {
-            BufferedReader br = new BufferedReader(new FileReader("NORMAL.txt"));
-            readPuzzle(br);
-            br.close();
+            readPuzzle("NORMAL.txt");
         } else {
-            BufferedReader br = new BufferedReader(new FileReader("HARD.txt"));
-            readPuzzle(br);
-            br.close();
+            readPuzzle("HARD.txt");
         }
-        } catch (IOException e) {
-			e.printStackTrace();
-		}
 		
-        mixMatrix();
+        mixPuzzle();
 
         markPuzzle();
 
-		return generatedMatrix;
+		return generatedPuzzle;
 	}
+
+    public boolean decided() {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                if (generatedPuzzle[i * ROWS + j]. equals("0")) return false;
+            }
+        }
+        return true;
+    }
 
     public void markPuzzle() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                if (!generatedMatrix[i * ROWS + j].equals("0")) {
+                if (!generatedPuzzle[i * ROWS + j].equals("0")) {
                     mark[i * ROWS + j] = true;
                 } else mark[i * ROWS + j] = false;
             }
@@ -64,41 +63,41 @@ public class SudokuGenerator {
         return mark[row * ROWS + column];
     }
 
-    private void readPuzzle (BufferedReader br) {
-    try {
-        int line = randomGenerator.nextInt((10 - 1) + 1) + 1;
-        String buff_line = new String();
-        int count = 0;
-        while (br.ready()) {
-            count++;
-            buff_line = br.readLine();
-            if (count == line) {
-                break;
-            }
+    private void readPuzzle (String levelFile) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(levelFile));
+            int line = randomGenerator.nextInt((10 - 1) + 1) + 1;
+            String buff_line = new String();
+            int count = 0;
+            while (br.ready()) {
+                count++;
+                buff_line = br.readLine();
+                if (count == line) break;
         }
-        generatedMatrix = buff_line.split("");
-    }  catch (IOException e) {
-        e.printStackTrace();
-    }
+        generatedPuzzle = buff_line.split("");
+        br.close();
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void mixMatrix () {
+    private void mixPuzzle () {
         for (int i = 0; i < maxMix; i++) {
             swaprandomColumn();
             swaprandomRows();
-            transposingMatrix();
+            transposingPuzzle();
             swaprandomcolumnArea();
             swaprandomrowsArea();
         }
     }
 
-    private void transposingMatrix () {
-        String[] matrix = new String[COLUMNS * ROWS];
+    private void transposingPuzzle () {
+        String[] puzzle = new String[COLUMNS * ROWS];
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                String value = generatedMatrix[j * ROWS + i];
-                matrix[i * ROWS + j] = value;
+                String value = generatedPuzzle[j * ROWS + i];
+                puzzle[i * ROWS + j] = value;
             }
         }
     }
@@ -119,16 +118,16 @@ public class SudokuGenerator {
         int numCol2 = randomArea * OFFSET + randomsecondCol;
 
         for (int i = 0; i < ROWS; i++) {
-            String buff1 = generatedMatrix[numCol1 + i * ROWS];
-            generatedMatrix[numCol1 + i * ROWS] = generatedMatrix[numCol2 + i * ROWS];
-            generatedMatrix[numCol2 + i * ROWS] = buff1;
+            String buff1 = generatedPuzzle[numCol1 + i * ROWS];
+            generatedPuzzle[numCol1 + i * ROWS] = generatedPuzzle[numCol2 + i * ROWS];
+            generatedPuzzle[numCol2 + i * ROWS] = buff1;
         }
     }
 
     private void swaprandomRows () {
-        transposingMatrix();
+        transposingPuzzle();
         swaprandomColumn();
-        transposingMatrix();
+        transposingPuzzle();
     }
 
     private void swaprandomcolumnArea () {
@@ -142,24 +141,24 @@ public class SudokuGenerator {
 
         for (int i = 0; i < OFFSET; i++) {
             for (int j = 0; j < ROWS; j++) {
-                String buff1 = generatedMatrix[randomArea1 * OFFSET + i + j * ROWS];
-                generatedMatrix[randomArea1 * OFFSET + i + j * ROWS] = generatedMatrix[randomArea2 * OFFSET + i + j * ROWS];
-                generatedMatrix[randomArea2 * OFFSET + i + j * ROWS] = buff1;
+                String buff1 = generatedPuzzle[randomArea1 * OFFSET + i + j * ROWS];
+                generatedPuzzle[randomArea1 * OFFSET + i + j * ROWS] = generatedPuzzle[randomArea2 * OFFSET + i + j * ROWS];
+                generatedPuzzle[randomArea2 * OFFSET + i + j * ROWS] = buff1;
             }
         }
     }
 
     private void swaprandomrowsArea () {
-        transposingMatrix();
+        transposingPuzzle();
         swaprandomcolumnArea();
-        transposingMatrix();
+        transposingPuzzle();
     }
 
     public String[] updatePuzzle (String value, int row, int column) {
         if (!isMarked(row, column) && isValidMove(value, row, column)) {
-            generatedMatrix[row * ROWS + column] = value;
+            generatedPuzzle[row * ROWS + column] = value;
         }
-        return generatedMatrix;
+        return generatedPuzzle;
     }
 
     private boolean isValidMove(String value, int row, int column) {
@@ -168,14 +167,14 @@ public class SudokuGenerator {
 
     private boolean usedinRow(String value, int row) {
         for (int col = 0; col < COLUMNS; col++) {
-            if (generatedMatrix[row * ROWS + col].equals(value)) return true;
+            if (generatedPuzzle[row * ROWS + col].equals(value)) return true;
         }
         return false;
     }
 
     private boolean usedinColumn(String value, int column) {
         for (int row = 0; row < ROWS; row++) {
-            if (generatedMatrix[row * ROWS + column].equals(value)) return true;
+            if (generatedPuzzle[row * ROWS + column].equals(value)) return true;
         }
         return false;
     }
@@ -189,7 +188,7 @@ public class SudokuGenerator {
 
         for(int r = startingRow; r <= (startingRow + OFFSET) - 1; r++) {
             for(int c = startingCol; c <= (startingCol + OFFSET) - 1; c++) {
-                if(generatedMatrix[r * ROWS + c].equals(value)) {
+                if(generatedPuzzle[r * ROWS + c].equals(value)) {
                     return true;
                 }
             }
