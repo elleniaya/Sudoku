@@ -3,6 +3,9 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 public class SudokuFrame extends JFrame {
 
 	private static final String NAME = "Sudoku";
@@ -14,10 +17,11 @@ public class SudokuFrame extends JFrame {
 	private static final String EASY = "Easy";
 	private static final String NORMAL = "Normal";
 	private static final String HARD = "Hard";
-	private static final String PASS = "Pass";
+	private static final String PASS = "PASS";
 
 	private static final String MESSAGEPASS = "Please fill in all empty cells!";
 	private static final String MESSAGENAME = "Please enter your name!";
+	private static final String MESSAGESUDOKUSOLVED = "Congratulations! You solved the Sudoku!";
 
     private static final String[] VALIDVALUES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
@@ -25,21 +29,24 @@ public class SudokuFrame extends JFrame {
 	private SudokuPanel sPanel;
 
 	private final NewGameListener newGameListener;
-	private final ClickListener listener;
-	private final PassListener passListener;
-	private final ExitListener exitListener;
+	private final Listener listener;
 
 	private String name;
 	
-	public SudokuFrame(NewGameListener newGameListener, ClickListener listener, PassListener passListener, ExitListener exitListener) {
+	public SudokuFrame(NewGameListener newGameListener, Listener listener) {
 		super(NAME);
 
 		this.newGameListener = newGameListener;
 		this.listener = listener;
-		this.passListener = passListener;
-		this.exitListener = exitListener;
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+            public void windowClosing(WindowEvent e) {
+				listener.exitTheGame();
+			}
+        });
+
 		this.setMinimumSize(new Dimension(900,600));
 
 		messageDialog();
@@ -60,7 +67,7 @@ public class SudokuFrame extends JFrame {
 		About.addActionListener(event -> new AboutFrame());
 
 		JMenuItem Records = new JMenuItem(RECORDS);
-		//Records.addActionListener(event -> );
+		Records.addActionListener(event -> listener.recordsButton());
 
 		JMenuItem levelEasy = new JMenuItem(EASY);
 		levelEasy.addActionListener(event -> newGameListener.newGameEasy());
@@ -71,8 +78,8 @@ public class SudokuFrame extends JFrame {
 		JMenuItem levelHard = new JMenuItem(HARD);
 		levelHard.addActionListener(event -> newGameListener.newGameHard());
 
-	    JMenuItem exit = new JMenuItem(EXIT, new ImageIcon("exit.png"));
-		exit.addActionListener(event -> exitListener.exitTheGame());
+	    JMenuItem exit = new JMenuItem(EXIT);
+		exit.addActionListener(event -> listener.exitTheGame());
 
 		newGame.add(levelEasy);
 		newGame.addSeparator();
@@ -129,13 +136,13 @@ public class SudokuFrame extends JFrame {
 		for(String value : VALIDVALUES) {
 			JButton b = new JButton(value);
 			b.setPreferredSize(new Dimension(50,40));
-			b.addActionListener(event -> listener.onClick(b.getText(), sPanel.getselectedRow(), sPanel.getselectedCol()));
+			b.addActionListener(event -> listener.clickNumberButton(b.getText(), sPanel.getselectedRow(), sPanel.getselectedCol()));
 			buttonSelectionPanel.add(b);
 		}
 
 		JButton passButton = new JButton(PASS);
 		passButton.setPreferredSize(new Dimension(90, 50));
-		passButton.addActionListener(event -> passListener.passbuttonListener());
+		passButton.addActionListener(event -> listener.passbuttonListener());
 		passButtonPanel.add(passButton);
 		passButtonPanel.repaint();
 
@@ -146,5 +153,9 @@ public class SudokuFrame extends JFrame {
 
 	public void errorEndGame() {
 		JOptionPane.showMessageDialog(null, MESSAGEPASS);
+	}
+
+	public void sudokuSolved() {
+		JOptionPane.showMessageDialog(null, MESSAGESUDOKUSOLVED);
 	}
 }
