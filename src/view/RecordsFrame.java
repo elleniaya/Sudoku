@@ -6,16 +6,22 @@ import java.awt.*;
 public class RecordsFrame extends JFrame {
     private static final String NAME = "Records";
 
-    public RecordsFrame() {
+    public RecordsFrame(String[][] data, String[] columnsHeader) {
         super(NAME);
 
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        this.setSize(new Dimension(620,650));
+        this.setSize(new Dimension(650, 650));
 
-        RecordsPanel panel = new RecordsPanel();
-        this.add(panel);
+        JTable table = new JTable(data, columnsHeader);
+
+        table.setRowHeight(30);
+        table.setEnabled(false);
+
+        Box contents = new Box(BoxLayout.Y_AXIS);
+        contents.add(new JScrollPane(table));
+        setContentPane(contents);
 
         this.setLocationRelativeTo(null);
-		    this.setVisible(true);
+        this.setVisible(true);
     }
 }
