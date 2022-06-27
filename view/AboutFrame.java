@@ -10,12 +10,12 @@ public class AboutFrame extends JFrame {
         super(NAME);
 
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        this.setSize(new Dimension(620,600));
+        this.setSize(new Dimension(620,650));
 
         AboutPanel panel = new AboutPanel();
         this.add(panel);
 
         this.setLocationRelativeTo(null);
-	this.setVisible(true);
+		this.setVisible(true);
     }
 }
