@@ -5,21 +5,27 @@ import model.Records;
 
 import view.SudokuFrame;
 import view.NewGameListener;
-import view.ClickListener;
-import view.PassListener;
-import view.ExitListener;
+import view.Listener;
+import view.RecordsFrame;
 
-public class SudokuController implements Runnable, NewGameListener, ClickListener, PassListener, ExitListener {
+public class SudokuController implements Runnable, NewGameListener, Listener {
     private final SudokuFrame frame;
     private final String easyLevel = "easy";
     private final String normalLevel = "normal";
     private final String hardLevel = "hard";
 
+    private final int easyPoints = 2;
+    private final int normalPoints = 5;
+    private final int hardPoints = 7;
+
+    private int POINTS;
+    private String currentLevel;
+
     SudokuGenerator newSudoku;
     Records newRecords = new Records();
 
     public SudokuController() {
-        this.frame = new SudokuFrame(this, this, this, this);
+        this.frame = new SudokuFrame(this, this);
         newSudoku = new SudokuGenerator();
     }
 
@@ -29,29 +35,36 @@ public class SudokuController implements Runnable, NewGameListener, ClickListene
 
     @Override
     public void newGameEasy() {
+        POINTS = easyPoints;
+        currentLevel = easyLevel;
         frame.update(newSudoku.generateRandomSudoku(easyLevel));
     }
 
     @Override
     public void newGameNormal() {
+        POINTS = normalPoints;
+        currentLevel = normalLevel;
         frame.update(newSudoku.generateRandomSudoku(normalLevel));
     }
 
     @Override
     public void newGameHard() {
+        POINTS = hardPoints;
+        currentLevel = hardLevel;
         frame.update(newSudoku.generateRandomSudoku(hardLevel));
     }
 
     @Override
-    public void onClick(String value, int row, int column) {
+    public void clickNumberButton(String value, int row, int column) {
         frame.update(newSudoku.updatePuzzle(value, row, column));
     }
 
     @Override
     public void passbuttonListener() {
         if (newSudoku.decided()) { 
-            //newRecords.addRecord(frame.getNameUser(), 9);
-            frame.update(newSudoku.generateRandomSudoku(easyLevel));
+            newRecords.addRecord(frame.getNameUser(), POINTS);
+            frame.sudokuSolved();
+            frame.update(newSudoku.generateRandomSudoku(currentLevel));
         } else {
             frame.errorEndGame();
         }
@@ -61,5 +74,10 @@ public class SudokuController implements Runnable, NewGameListener, ClickListene
     public void exitTheGame() {
         newRecords.writeRecords();
         System.exit(0);
+    }
+
+    @Override
+    public void recordsButton() {
+        new RecordsFrame(newRecords.getDataTable(), newRecords.getcolumnsHeader());
     }
 }
