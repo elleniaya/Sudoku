@@ -26,11 +26,11 @@ public class SudokuGenerator {
 	public String[] generateRandomSudoku(String level) {
 
         if (level.equals(easy)) {
-            readPuzzle("EASY.txt");
+            readPuzzle("src/RESOURCES/EASY.txt");
         } else if (level.equals(normal)) {
-            readPuzzle("NORMAL.txt");
+            readPuzzle("src/RESOURCES/NORMAL.txt");
         } else {
-            readPuzzle("HARD.txt");
+            readPuzzle("src/RESOURCES/HARD.txt");
         }
 		
         mixPuzzle();
@@ -43,7 +43,7 @@ public class SudokuGenerator {
     public boolean decided() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                if (generatedPuzzle[i * ROWS + j]. equals("0")) return false;
+                if (generatedPuzzle[i * ROWS + j].equals("0")) return false;
             }
         }
         return true;
