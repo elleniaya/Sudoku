@@ -9,9 +9,9 @@ import java.nio.file.Paths;
 public class Records {
     private String[] columnsHeader = new String[] {"Name", "Points"};
     private static int NOTUSED = -1;
+    String[][] dataTable;
 
     ArrayList<Pair> data = new ArrayList<>();
-    String[][] dataTable;
 
     public Records() {
         readRecords();
@@ -19,7 +19,7 @@ public class Records {
 
     private void readRecords() {
         try{
-            String fileName = "records.txt";
+            String fileName = "src/RESOURCES/records.txt";
             Path path = Paths.get(fileName);
             Scanner scanner = new Scanner(path);
             scanner.useDelimiter(System.getProperty("line.separator"));
@@ -27,6 +27,7 @@ public class Records {
                 data.add(parseLine(scanner.nextLine()));
             }
             scanner.close();
+            sortTable();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,6 +61,8 @@ public class Records {
             data.add(new Pair(name, glasses));
         }
         sortTable();
+        dataTable = new String[data.size()][2];
+        updateDataTable();
     }
 
     private int nameUsed(String name) {
@@ -76,15 +79,15 @@ public class Records {
     }
 
     public String[][] getDataTable() {
-        sortTable();
+        dataTable = new String[data.size()][2];
         updateDataTable();
         return dataTable;
     }
 
     private void updateDataTable() {
         for (int i = 0; i < data.size(); i++) {
-            dataTable[i][1] = data.get(i).name;
-            dataTable[i][2] = Integer.toString(data.get(i).points);
+            dataTable[i][0] = data.get(i).name;
+            dataTable[i][1] = Integer.toString(data.get(i).points);
         }
     }
 
