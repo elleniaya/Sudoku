@@ -1,25 +1,25 @@
 package controller;
 
 import model.SudokuGenerator;
+import model.Records;
 
 import view.SudokuFrame;
 import view.NewGameListener;
 import view.ClickListener;
+import view.PassListener;
+import view.ExitListener;
 
-public class SudokuController implements Runnable, NewGameListener, ClickListener {
+public class SudokuController implements Runnable, NewGameListener, ClickListener, PassListener, ExitListener {
     private final SudokuFrame frame;
     private final String easyLevel = "easy";
     private final String normalLevel = "normal";
     private final String hardLevel = "hard";
+
     SudokuGenerator newSudoku;
-
-    private final int ROWS = 9;
-    private final int COLUMNS = 9;
-
-    String[] puzzle = new String[ROWS * COLUMNS];
+    Records newRecords = new Records();
 
     public SudokuController() {
-        this.frame = new SudokuFrame(this, this);
+        this.frame = new SudokuFrame(this, this, this, this);
         newSudoku = new SudokuGenerator();
     }
 
@@ -29,28 +29,37 @@ public class SudokuController implements Runnable, NewGameListener, ClickListene
 
     @Override
     public void newGameEasy() {
-        puzzle = newSudoku.generateRandomSudoku(easyLevel);
-        newSudoku.markPuzzle();
-        frame.update(puzzle);
+        frame.update(newSudoku.generateRandomSudoku(easyLevel));
     }
 
     @Override
     public void newGameNormal() {
-        puzzle = newSudoku.generateRandomSudoku(normalLevel);
-        newSudoku.markPuzzle();
-        frame.update(puzzle);
+        frame.update(newSudoku.generateRandomSudoku(normalLevel));
     }
 
     @Override
     public void newGameHard() {
-        puzzle = newSudoku.generateRandomSudoku(hardLevel);
-        newSudoku.markPuzzle();
-        frame.update(puzzle);
+        frame.update(newSudoku.generateRandomSudoku(hardLevel));
     }
 
     @Override
     public void onClick(String value, int row, int column) {
-        puzzle = newSudoku.updatePuzzle(value, row, column);
-        frame.update(puzzle);
+        frame.update(newSudoku.updatePuzzle(value, row, column));
+    }
+
+    @Override
+    public void passbuttonListener() {
+        if (newSudoku.decided()) { 
+            //newRecords.addRecord(frame.getNameUser(), 9);
+            frame.update(newSudoku.generateRandomSudoku(easyLevel));
+        } else {
+            frame.errorEndGame();
+        }
+    }
+
+    @Override
+    public void exitTheGame() {
+        newRecords.writeRecords();
+        System.exit(0);
     }
 }
