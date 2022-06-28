@@ -6,11 +6,11 @@ import java.awt.*;
 public class RecordsFrame extends JFrame {
     private static final String NAME = "Records";
 
-    public RecordsFrame(String[][] data, String[] columnsHeader) {
+    public RecordsFrame(String[][] data, String[] columnsHeader, int width, int height) {
         super(NAME);
 
         this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        this.setSize(new Dimension(650, 650));
+        this.setSize(new Dimension(width, height));
 
         JTable table = new JTable(data, columnsHeader);
 
