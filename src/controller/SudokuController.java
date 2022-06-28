@@ -7,26 +7,31 @@ import view.SudokuFrame;
 import view.NewGameListener;
 import view.Listener;
 import view.RecordsFrame;
+import java.io.IOException;
+
+import main.GameSettings;
 
 public class SudokuController implements Runnable, NewGameListener, Listener {
     private final SudokuFrame frame;
-    private final String easyLevel = "easy";
-    private final String normalLevel = "normal";
-    private final String hardLevel = "hard";
+    private static final String EASY_LEVEL = "easy";
+    private static final String NORMAL_LEVEL = "normal";
+    private static final String HARD_LEVEL = "hard";
 
-    private final int easyPoints = 2;
-    private final int normalPoints = 5;
-    private final int hardPoints = 7;
+    private static final int EASY_POINTS = 2;
+    private static final int NORMAL_POINTS = 5;
+    private static final int HARD_POINTS = 7;
 
-    private int POINTS;
+    private int points;
     private String currentLevel;
 
-    SudokuGenerator newSudoku;
-    Records newRecords = new Records();
+    private final SudokuGenerator newSudoku;
+    private final Records newRecords = new Records();
+    private final GameSettings settings;
 
-    public SudokuController() {
-        this.frame = new SudokuFrame(this, this);
-        newSudoku = new SudokuGenerator();
+    public SudokuController() throws IOException {
+        this.settings = new GameSettings();
+        this.frame = new SudokuFrame(this, this, settings);
+        newSudoku = new SudokuGenerator(settings.rows, settings.columns, settings.boxHeight);
     }
 
     public void run() {
@@ -35,23 +40,23 @@ public class SudokuController implements Runnable, NewGameListener, Listener {
 
     @Override
     public void newGameEasy() {
-        POINTS = easyPoints;
-        currentLevel = easyLevel;
-        frame.update(newSudoku.generateRandomSudoku(easyLevel));
+        points = EASY_POINTS;
+        currentLevel = EASY_LEVEL;
+        frame.update(newSudoku.generateRandomSudoku(EASY_LEVEL));
     }
 
     @Override
     public void newGameNormal() {
-        POINTS = normalPoints;
-        currentLevel = normalLevel;
-        frame.update(newSudoku.generateRandomSudoku(normalLevel));
+        points = NORMAL_POINTS;
+        currentLevel = NORMAL_LEVEL;
+        frame.update(newSudoku.generateRandomSudoku(NORMAL_LEVEL));
     }
 
     @Override
     public void newGameHard() {
-        POINTS = hardPoints;
-        currentLevel = hardLevel;
-        frame.update(newSudoku.generateRandomSudoku(hardLevel));
+        points = HARD_POINTS;
+        currentLevel = HARD_LEVEL;
+        frame.update(newSudoku.generateRandomSudoku(HARD_LEVEL));
     }
 
     @Override
@@ -60,9 +65,9 @@ public class SudokuController implements Runnable, NewGameListener, Listener {
     }
 
     @Override
-    public void passbuttonListener() {
+    public void passButtonListener() {
         if (newSudoku.decided()) { 
-            newRecords.addRecord(frame.getNameUser(), POINTS);
+            newRecords.addRecord(frame.getNameUser(), points);
             frame.sudokuSolved();
             frame.update(newSudoku.generateRandomSudoku(currentLevel));
         } else {
@@ -78,6 +83,6 @@ public class SudokuController implements Runnable, NewGameListener, Listener {
 
     @Override
     public void recordsButton() {
-        new RecordsFrame(newRecords.getDataTable(), newRecords.getcolumnsHeader());
+        new RecordsFrame(newRecords.getDataTable(), newRecords.getColumnsHeader(), settings.recordsFrameWidth, settings.recordsFrameHeight);
     }
 }
