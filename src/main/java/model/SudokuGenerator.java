@@ -32,11 +32,11 @@ public class SudokuGenerator {
 	public String[] generateRandomSudoku(String level) {
 
         if (level.equals(EASY)) {
-            readPuzzle("src/RESOURCES/EASY.txt");
+            readPuzzle("src/main/java/RESOURCES/EASY.txt");
         } else if (level.equals(NORMAL)) {
-            readPuzzle("src/RESOURCES/NORMAL.txt");
+            readPuzzle("src/main/java/RESOURCES/NORMAL.txt");
         } else {
-            readPuzzle("src/RESOURCES/HARD.txt");
+            readPuzzle("src/main/java/RESOURCES/HARD.txt");
         }
 		
         mixPuzzle();
