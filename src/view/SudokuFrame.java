@@ -3,6 +3,8 @@ package view;
 import java.awt.*;
 import javax.swing.*;
 
+import main.GameSettings;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -19,25 +21,27 @@ public class SudokuFrame extends JFrame {
 	private static final String HARD = "Hard";
 	private static final String PASS = "PASS";
 
-	private static final String MESSAGEPASS = "Please fill in all empty cells!";
-	private static final String MESSAGENAME = "Please enter your name!";
-	private static final String MESSAGESUDOKUSOLVED = "Congratulations! You solved the Sudoku!";
+	private static final String MESSAGE_PASS = "Please fill in all empty cells!";
+	private static final String MESSAGE_NAME = "Please enter your name!";
+	private static final String MESSAGE_SUDOKU_SOLVED = "Congratulations! You solved the Sudoku!";
 
-    private static final String[] VALIDVALUES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    private static final String[] VALID_VALUES = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
 	private JPanel buttonSelectionPanel, passButtonPanel;
 	private SudokuPanel sPanel;
 
 	private final NewGameListener newGameListener;
 	private final Listener listener;
+	private final GameSettings settings;
 
 	private String name;
 	
-	public SudokuFrame(NewGameListener newGameListener, Listener listener) {
+	public SudokuFrame(NewGameListener newGameListener, Listener listener, GameSettings settings) {
 		super(NAME);
 
 		this.newGameListener = newGameListener;
 		this.listener = listener;
+		this.settings = settings;
 
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(new WindowAdapter() {
@@ -47,7 +51,8 @@ public class SudokuFrame extends JFrame {
 			}
         });
 
-		this.setMinimumSize(new Dimension(900,600));
+		//this.setMinimumSize(new Dimension(900,600));
+		this.setMinimumSize(new Dimension(settings.sudokuFrameWidth,settings.sudokuFrameHeight));
 
 		messageDialog();
 		setupMenu();
@@ -63,11 +68,11 @@ public class SudokuFrame extends JFrame {
 
 		JMenu newGame = new JMenu(NEWGAME);
 
-		JMenuItem About = new JMenuItem(ABOUT);
-		About.addActionListener(event -> new AboutFrame());
+		JMenuItem about = new JMenuItem(ABOUT);
+		about.addActionListener(event -> new AboutFrame(settings.aboutFrameWidth, settings.aboutFrameHeight));
 
-		JMenuItem Records = new JMenuItem(RECORDS);
-		Records.addActionListener(event -> listener.recordsButton());
+		JMenuItem records = new JMenuItem(RECORDS);
+		records.addActionListener(event -> listener.recordsButton());
 
 		JMenuItem levelEasy = new JMenuItem(EASY);
 		levelEasy.addActionListener(event -> newGameListener.newGameEasy());
@@ -89,9 +94,9 @@ public class SudokuFrame extends JFrame {
 
 		menu.add(newGame);
 		menu.addSeparator();
-		menu.add(About);
+		menu.add(about);
 		menu.addSeparator();
-		menu.add(Records);
+		menu.add(records);
 		menu.addSeparator();
 		menu.add(exit);
 
@@ -102,15 +107,20 @@ public class SudokuFrame extends JFrame {
 	private void createPanel() {
 		JPanel windowPanel = new JPanel();
 		windowPanel.setLayout(new FlowLayout());
-		windowPanel.setPreferredSize(new Dimension(800, 600));
+		//windowPanel.setPreferredSize(new Dimension(800, 600));
+		windowPanel.setPreferredSize(new Dimension(settings.windowPanelWidth, settings.windowPanelHeight));
 
 		buttonSelectionPanel = new JPanel();
-		buttonSelectionPanel.setPreferredSize(new Dimension(90, 450));
+
+		//buttonSelectionPanel.setPreferredSize(new Dimension(90, 450));
+		buttonSelectionPanel.setPreferredSize(new Dimension(settings.buttonSelectionPanelWidth, settings.buttonSelectionPanelHeight));
 
 		passButtonPanel = new JPanel();
-		passButtonPanel.setPreferredSize(new Dimension(100, 60));
 
-		sPanel = new SudokuPanel();
+		//passButtonPanel.setPreferredSize(new Dimension(100, 60));
+		passButtonPanel.setPreferredSize(new Dimension(settings.passButtonPanelWidth, settings.passButtonPanelHeight));
+
+		sPanel = new SudokuPanel(settings.rows, settings.columns, settings.boxWidth, settings.boxHeight, settings.windowPanelWidth, settings.windowPanelHeight);
 		
 		windowPanel.add(sPanel);
 		windowPanel.add(buttonSelectionPanel);
@@ -121,7 +131,7 @@ public class SudokuFrame extends JFrame {
 	private void messageDialog() {                   
         name = JOptionPane.showInputDialog("Enter your name:");
 		while (name.isEmpty()) {
-			JOptionPane.showMessageDialog(null, MESSAGENAME);
+			JOptionPane.showMessageDialog(null, MESSAGE_NAME);
 			name = JOptionPane.showInputDialog("Enter your name:");
 		}
 	}
@@ -133,16 +143,18 @@ public class SudokuFrame extends JFrame {
 	public void update(String[] puzzle) {
 		sPanel.newSudokuPuzzle(puzzle);
 		buttonSelectionPanel.removeAll();
-		for(String value : VALIDVALUES) {
+		for(String value : VALID_VALUES) {
 			JButton b = new JButton(value);
-			b.setPreferredSize(new Dimension(50,40));
-			b.addActionListener(event -> listener.clickNumberButton(b.getText(), sPanel.getselectedRow(), sPanel.getselectedCol()));
+			//b.setPreferredSize(new Dimension(50,40));
+			b.setPreferredSize(new Dimension(settings.numberButtonWidth,settings.numberButtonHeight));
+			b.addActionListener(event -> listener.clickNumberButton(b.getText(), sPanel.getSelectedRow(), sPanel.getSelectedCol()));
 			buttonSelectionPanel.add(b);
 		}
 
 		JButton passButton = new JButton(PASS);
-		passButton.setPreferredSize(new Dimension(90, 50));
-		passButton.addActionListener(event -> listener.passbuttonListener());
+		//passButton.setPreferredSize(new Dimension(90, 50));
+		passButton.setPreferredSize(new Dimension(settings.passButtonWidth, settings.passButtonHeight));
+		passButton.addActionListener(event -> listener.passButtonListener());
 		passButtonPanel.add(passButton);
 		passButtonPanel.repaint();
 
@@ -152,10 +164,10 @@ public class SudokuFrame extends JFrame {
 	}
 
 	public void errorEndGame() {
-		JOptionPane.showMessageDialog(null, MESSAGEPASS);
+		JOptionPane.showMessageDialog(null, MESSAGE_PASS);
 	}
 
 	public void sudokuSolved() {
-		JOptionPane.showMessageDialog(null, MESSAGESUDOKUSOLVED);
+		JOptionPane.showMessageDialog(null, MESSAGE_SUDOKU_SOLVED);
 	}
 }
