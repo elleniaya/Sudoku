@@ -16,8 +16,8 @@ public class SudokuPanel extends JPanel {
 
 	private final int ROWS;
 	private final int COLUMNS;
-	private final int BOXWIDTH;
-	private final int BOXHEIGHT;
+	private final int BOX_WIDTH;
+	private final int BOX_HEIGHT;
 	private int selectedCol;
 	private int selectedRow;
 
@@ -32,8 +32,8 @@ public class SudokuPanel extends JPanel {
 		this.addMouseListener(new SudokuPanelMouseAdapter());
 		this.ROWS = rows;
 		this.COLUMNS = columns;
-		this.BOXHEIGHT = boxHeight;
-		this.BOXWIDTH = boxWidth;
+		this.BOX_HEIGHT = boxHeight;
+		this.BOX_WIDTH = boxWidth;
 		puzzle = new String[ROWS * COLUMNS];
 		usedWidth = 0;
 		usedHeight = 0;
@@ -64,7 +64,7 @@ public class SudokuPanel extends JPanel {
 		
 		g2d.setColor(new Color(0.0f, 0.0f, 0.0f)); 
 		for (int x = 0; x <= usedWidth; x += slotWidth) {
-			if((x / slotWidth) % BOXWIDTH == 0) {
+			if((x / slotWidth) % BOX_WIDTH == 0) {
 				g2d.setStroke(new BasicStroke(2));
 				g2d.drawLine(x, 0, x, usedHeight);
 			}
@@ -75,7 +75,7 @@ public class SudokuPanel extends JPanel {
 		}
 
 		for (int y = 0; y <= usedHeight; y += slotHeight) {
-			if((y / slotHeight) % BOXHEIGHT == 0) {
+			if((y / slotHeight) % BOX_HEIGHT == 0) {
 				g2d.setStroke(new BasicStroke(2));
 				g2d.drawLine(0, y, usedWidth, y);
 			}
