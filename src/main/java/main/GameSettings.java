@@ -31,7 +31,7 @@ public class GameSettings {
     private final Properties properties = new Properties();
 
     public GameSettings() throws IOException{
-        FileInputStream file = new FileInputStream("src/RESOURCES/settings.properties");
+        FileInputStream file = new FileInputStream("src/main/java/RESOURCES/settings.properties");
         properties.load(file);
 
         sudokuFrameHeight = getInteger(properties, "sudokuFrameHeight");
