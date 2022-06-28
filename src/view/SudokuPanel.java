@@ -14,22 +14,27 @@ import javax.swing.JPanel;
 
 public class SudokuPanel extends JPanel {
 
-	private final int ROWS = 9;
-	private final int COLUMNS = 9;
-	private final int BOXWIDTH = 3;
-	private final int BOXHEIGHT = 3;
+	private final int ROWS;
+	private final int COLUMNS;
+	private final int BOXWIDTH;
+	private final int BOXHEIGHT;
 	private int selectedCol;
 	private int selectedRow;
 
-	String[] puzzle = new String[ROWS * COLUMNS];
+	private String[] puzzle;
 
 	private int usedWidth;
 	private int usedHeight;
 	private int Size;
 	
-	public SudokuPanel() {
-		this.setPreferredSize(new Dimension(540,450));
+	public SudokuPanel(int rows, int columns, int boxWidth, int boxHeight, int width, int height) {
+		this.setPreferredSize(new Dimension(width, height));
 		this.addMouseListener(new SudokuPanelMouseAdapter());
+		this.ROWS = rows;
+		this.COLUMNS = columns;
+		this.BOXHEIGHT = boxHeight;
+		this.BOXWIDTH = boxWidth;
+		puzzle = new String[ROWS * COLUMNS];
 		usedWidth = 0;
 		usedHeight = 0;
 		Size = 26;
@@ -99,11 +104,11 @@ public class SudokuPanel extends JPanel {
 		}
 	}
 
-	public int getselectedRow() {
+	public int getSelectedRow() {
 		return selectedRow;
 	}
 
-	public int getselectedCol() {
+	public int getSelectedCol() {
 		return selectedCol;
 	}
 
