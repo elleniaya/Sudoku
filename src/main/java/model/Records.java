@@ -19,7 +19,7 @@ public class Records {
 
     private void readRecords() {
         try{
-            String fileName = "src/RESOURCES/records.txt";
+            String fileName = "src/main/java/RESOURCES/records.txt";
             Path path = Paths.get(fileName);
             Scanner scanner = new Scanner(path);
             scanner.useDelimiter(System.getProperty("line.separator"));
