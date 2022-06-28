@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 
 public class Records {
     private String[] columnsHeader = new String[] {"Name", "Points"};
-    private static int NOTUSED = -1;
-    String[][] dataTable;
+    private static final int NOT_USED = -1;
+    private String[][] dataTable;
 
     ArrayList<Pair> data = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class Records {
 
     public void writeRecords() {
         try {
-            FileWriter writer = new FileWriter("records.txt");
+            FileWriter writer = new FileWriter("src/RESOURCES/records.txt");
             for (Pair pair : data) {
                 writer.write(pair.name + " " + pair.points + System.getProperty("line.separator"));
             }
@@ -55,7 +55,7 @@ public class Records {
     }
 
     public void addRecord(String name, int glasses) {
-        if (nameUsed(name) != NOTUSED) {
+        if (nameUsed(name) != NOT_USED) {
             data.get(nameUsed(name)).updatePoints(glasses);
         } else {
             data.add(new Pair(name, glasses));
@@ -71,10 +71,10 @@ public class Records {
                 return i;
             }
         }
-        return NOTUSED;
+        return NOT_USED;
     }
 
-    public String[] getcolumnsHeader() {
+    public String[] getColumnsHeader() {
         return columnsHeader;
     }
 
