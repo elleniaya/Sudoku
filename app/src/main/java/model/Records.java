@@ -19,7 +19,7 @@ public class Records {
 
     private void readRecords() {
         try{
-            String fileName = "src/main/java/RESOURCES/records.txt";
+            String fileName = "src/main/resources/records.txt";
             Path path = Paths.get(fileName);
             Scanner scanner = new Scanner(path);
             scanner.useDelimiter(System.getProperty("line.separator"));
@@ -44,7 +44,7 @@ public class Records {
 
     public void writeRecords() {
         try {
-            FileWriter writer = new FileWriter("src/RESOURCES/records.txt");
+            FileWriter writer = new FileWriter("src/main/resources/records.txt");
             for (Pair pair : data) {
                 writer.write(pair.name + " " + pair.points + System.getProperty("line.separator"));
             }
