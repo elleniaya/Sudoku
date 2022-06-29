@@ -6,7 +6,7 @@ import javax.swing.*;
 public class AboutPanel extends JPanel {
     @Override
 	protected void paintComponent(Graphics g) {
-        Image image = new ImageIcon("src/main/java/RESOURCES/rules.png").getImage();
+        Image image = new ImageIcon("src/main/resources/rules.png").getImage();
         g.drawImage(image, 0, 0, this);
     }
 }
