@@ -17,6 +17,6 @@ public class AboutFrame extends JFrame {
         this.add(panel);
 
         this.setLocationRelativeTo(null);
-		this.setVisible(true);
+	this.setVisible(true);
     }
 }
