@@ -83,7 +83,7 @@ public class SudokuFrame extends JFrame {
 		JMenuItem levelHard = new JMenuItem(HARD);
 		levelHard.addActionListener(event -> newGameListener.newGameHard());
 
-	    JMenuItem exit = new JMenuItem(EXIT);
+	        JMenuItem exit = new JMenuItem(EXIT);
 		exit.addActionListener(event -> listener.exitTheGame());
 
 		newGame.add(levelEasy);
@@ -129,11 +129,18 @@ public class SudokuFrame extends JFrame {
 	}
 
 	private void messageDialog() {                   
-        name = JOptionPane.showInputDialog("Enter your name:");
-		while (name.isEmpty()) {
+                name = JOptionPane.showInputDialog("Enter your name:");
+		while (name.isEmpty() || containsOnlySpaces()) {
 			JOptionPane.showMessageDialog(null, MESSAGE_NAME);
 			name = JOptionPane.showInputDialog("Enter your name:");
 		}
+	}
+
+	private boolean containsOnlySpaces() {
+		for (int i = 0; i < name.length(); i++) {
+			if (name.charAt(i) == ' ') return true;
+		}
+		return false;
 	}
 
 	public String getNameUser() {
