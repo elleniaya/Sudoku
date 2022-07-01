@@ -29,14 +29,6 @@ public class SudokuGenerator {
         this.mark = new boolean[rows * columns];
     }
 
-    /*public SudokuGenerator(int rows, int columns, int boxHeight, String[] puzzle) {
-        this.rows = rows;
-        this.columns = columns;
-        this.boxHeight = boxHeight;
-        this.generatedPuzzle = puzzle;
-        this.mark = new boolean[rows * columns];
-    }*/
-
 	public String[] generateRandomSudoku(String level) {
 
         if (level.equals(EASY)) {
@@ -81,7 +73,7 @@ public class SudokuGenerator {
         try {
             BufferedReader br = new BufferedReader(new FileReader(levelFile));
             int line = randomGenerator.nextInt((10 - 1) + 1) + 1;
-            String buff_line = new String();
+            String buff_line = "";
             int count = 0;
             while (br.ready()) {
                 count++;
@@ -130,8 +122,12 @@ public class SudokuGenerator {
             randomsecondCol = randomGenerator.nextInt(columns / boxHeight);
         }
 
-        int numCol1 = randomArea * boxHeight + randomfirstCol;
-        int numCol2 = randomArea * boxHeight + randomsecondCol;
+        swapColumn(randomArea, randomfirstCol, randomsecondCol);
+    }
+
+    protected void swapColumn(int area, int firstCol, int secondCol) {
+        int numCol1 = area * boxHeight + firstCol;
+        int numCol2 = area * boxHeight + secondCol;
 
         for (int i = 0; i < rows; i++) {
             String buff1 = generatedPuzzle[numCol1 + i * rows];
@@ -141,8 +137,18 @@ public class SudokuGenerator {
     }
 
     protected void swapRandomRows () {
+        int randomArea = randomGenerator.nextInt(columns / boxHeight);
+
+        int randomfirstRow = randomGenerator.nextInt(columns / boxHeight);
+
+        int randomsecondRow = randomGenerator.nextInt(columns / boxHeight);
+
+        swapRows(randomArea, randomfirstRow, randomsecondRow);
+    }
+
+    protected void swapRows(int area, int firstRow, int secondRow) {
         generatedPuzzle = transposingPuzzle();
-        swapRandomColumn();
+        swapColumn(area, firstRow, secondRow);
         generatedPuzzle = transposingPuzzle();
     }
 
@@ -155,6 +161,10 @@ public class SudokuGenerator {
             randomArea2 = randomGenerator.nextInt(columns / boxHeight);
         }
 
+        swapColumnArea(randomArea1, randomArea2);
+    }
+
+    protected void swapColumnArea(int randomArea1, int randomArea2) {
         for (int i = 0; i < boxHeight; i++) {
             for (int j = 0; j < rows; j++) {
                 String buff1 = generatedPuzzle[randomArea1 * boxHeight + i + j * rows];
@@ -165,8 +175,19 @@ public class SudokuGenerator {
     }
 
     protected void swapRandomRowsArea () {
+        int randomArea1 = randomGenerator.nextInt(columns / boxHeight);
+        int randomArea2 = randomGenerator.nextInt(columns / boxHeight);
+
+        while (randomArea1 == randomArea2) {
+            randomArea2 = randomGenerator.nextInt(columns / boxHeight);
+        }
+
+        swapRowsArea(randomArea1, randomArea2);
+    }
+
+    protected void swapRowsArea(int randomArea1, int randomArea2) {
         generatedPuzzle = transposingPuzzle();
-        swapRandomColumnArea();
+        swapColumnArea(randomArea1, randomArea2);
         generatedPuzzle = transposingPuzzle();
     }
 
